@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-
+import re
 
 def cleanse_word(word):
     # find regex for word
-    return word.lower().strip(',').strip('.').strip('\'').strip('"').strip('*').strip('?').strip('!').strip(';').strip(':')
-
+    return re.sub('[^a-zA-Z0-9]', ' ', word.lower())
 
 class WordCounter(object):
     """ Word counting object, counts total words and top 10 occurring words """
@@ -18,8 +17,7 @@ class WordCounter(object):
 
     def count_words(self, num):
         with open(self.file_path, 'r') as f:
-            for word in f.read().split():
-                word = cleanse_word(word)
+            for word in cleanse_word(f.read()).split():
                 self.word_freq.setdefault(word, 0)
                 self.word_freq[word] += 1
                 self.total_words += 1
@@ -43,8 +41,7 @@ class WordCounter(object):
 
     def show_counter(self, word_in):
         with open(self.file_path, 'r') as f:
-            for word in f.read().split():
-                word = cleanse_word(word)
+            for word in cleanse_word(f.read()).split():
                 self.word_counter.setdefault(word_in, 0)
                 if word == word_in:
                     self.word_counter[word_in] += 1
