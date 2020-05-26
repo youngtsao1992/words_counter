@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Word counting program, counts frequency of words in a file.')
     parser.add_argument("file_path")
-    parser.add_argument("-w","--word", help="calculate counter of given word", type = str)
+    parser.add_argument("-w","--words", help="calculate counter of given words", type = str)
     parser.add_argument("-n","--num", help="top number to generate", type = int, default = 10)
     
     args = parser.parse_args()
@@ -20,9 +20,6 @@ if __name__ == "__main__":
 
     wc = WordCounter(txt_file.textFilename)
 
-    if args.word != None:
-        wc.show_counter(args.word)
-
     if args.num > 0:
         wc.count_words(args.num)
         print("=========================")
@@ -30,3 +27,9 @@ if __name__ == "__main__":
         print("=========================")
         wc.display_top()
         print("Total Words: {}".format(wc.total_words))
+
+    if args.words != None:
+        print("=============================")
+        print("   Counter for words given   ")
+        print("=============================")
+        wc.counter_words(args.words)

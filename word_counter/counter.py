@@ -13,7 +13,7 @@ class WordCounter(object):
         self.total_words = 0
         self.file_path = file_path
         self.word_freq = dict()
-        self.word_counter = dict()
+        self.words_counter = dict()
 
     def count_words(self, num):
         with open(self.file_path, 'r') as f:
@@ -39,11 +39,14 @@ class WordCounter(object):
         for word in self.top:
             print(word, self.word_freq[word])
 
-    def show_counter(self, word_in):
+    def counter_words(self, words_in):
+        words_list = words_in.split()
+        for word in words_list:
+            self.words_counter.setdefault(word, 0)
         with open(self.file_path, 'r') as f:
-            for word in cleanse_word(f.read()).split():
-                self.word_counter.setdefault(word_in, 0)
-                if word == word_in:
-                    self.word_counter[word_in] += 1
-        print(word_in, self.word_counter[word_in])
+            for w in cleanse_word(f.read()).split():
+                if w in words_list:
+                    self.words_counter[w] += 1
+        for word in self.words_counter:
+            print(word, self.words_counter[word])
 
