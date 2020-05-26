@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import re
+import csv
 
 def cleanse_word(word):
     # find regex for word
@@ -49,4 +50,11 @@ class WordCounter(object):
                     self.words_counter[w] += 1
         for word in self.words_counter:
             print(word, self.words_counter[word])
+        self.save_to_csv()
+
+    def save_to_csv(self):
+        with open("words_frequency.csv", "w", newline='') as f:
+            f_csv = csv.writer(f)
+            for key, value in self.words_counter.items():
+                f_csv.writerow([key, value])
 
