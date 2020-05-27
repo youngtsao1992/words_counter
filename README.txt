@@ -1,7 +1,12 @@
+Easy steps to use:
+1. install python3.x
+2. install words_counter\installer\Output\word-counter.exe
+3. run program. (For example, double click the shortcut on desktop)
+
+Details:
 Install running environment:
 1. install python3.8
 2. install the requirements, using command: pip install -r requirements.txt
-
 
 usage: word_counter.py [-h] [-w WORD] [-n NUM] file_path
 
