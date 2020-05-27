@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import os
 from word_counter.counter import WordCounter
 from filetype_convert.doc2txt import FileTypeConvert
 
@@ -11,6 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("file_path")
     parser.add_argument("-w","--words", help="calculate counter of given words", type = str)
     parser.add_argument("-n","--num", help="top number to generate", type = int, default = 0)
+    parser.add_argument("-c","--clean", help="clean temp files", type = bool, default = True)
     
     args = parser.parse_args()
     file_path = args.file_path
@@ -34,3 +36,5 @@ if __name__ == "__main__":
         print("=============================")
         wc.counter_words(args.words)
 
+    if args.clean == True:
+        os.remove(txt_file.textFilename)
