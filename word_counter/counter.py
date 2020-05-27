@@ -44,7 +44,7 @@ class WordCounter(object):
         words_list = words_in.split()
         for word in words_list:
             self.words_counter.setdefault(word, 0)
-        with open(self.file_path, 'r') as f:
+        with open(self.file_path, 'r', encoding='utf-8') as f:
             for w in cleanse_word(f.read()).split():
                 if w in words_list:
                     self.words_counter[w] += 1
