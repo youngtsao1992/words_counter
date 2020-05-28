@@ -34,7 +34,7 @@ if __name__ == "__main__":
         print("=============================")
         print("   Counter for words given   ")
         print("=============================")
-        wc.counter_words(args.words)
+        wc.counter_words_v2(args.words)
 
     if args.clean == True:
         os.remove(txt_file.textFilename)
