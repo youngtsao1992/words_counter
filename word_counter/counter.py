@@ -30,6 +30,8 @@ pat_ve = re.compile("(?<=[a-zA-Z])\'ve")
 
 lmtzr = WordNetLemmatizer()
 
+csv_header = ['WORD', 'COUNT', 'TAG']
+
 def replace_abbreviations(text):
     new_text = text
     new_text = pat_letter.sub(' ', text).strip().lower()
@@ -83,74 +85,54 @@ def append_ext(words):
     return new_words
 
 class WordCounter(object):
-    """ Word counting object, counts total words and top 10 occurring words """
 
     def __init__(self, file_path):
-        self.top = list()
         self.total_words = 0
         self.file_path = file_path
-        self.word_freq = dict()
-        self.words_counter = dict()
-
-    def count_words(self, num):
-        with open(self.file_path, 'r') as f:
-            for word in cleanse_word(f.read()):
-                self.word_freq.setdefault(word, 0)
-                self.word_freq[word] += 1
-                self.total_words += 1
-                self._insert_to_top(word, num)
-
-    def _insert_to_top(self, w, num):
-        if self.top:
-            for index, item in enumerate(self.top):
-                if self.word_freq[item] <= self.word_freq[w]:
-                    if w in self.top:
-                        del self.top[self.top.index(w)]
-                    self.top.insert(index, w)
-                    del self.top[num:]
-                    break
-        else:
-            self.top.append(w)
-
-    def display_top(self):
-        for word in self.top:
-            print(word, self.word_freq[word])
-
-    def counter_words(self, words_in):
-        words_list = words_in.split()
-        for word in words_list:
-            self.words_counter.setdefault(word, 0)
-        with open(self.file_path, 'r', encoding='utf-8') as f:
-            for w in cleanse_word(f.read()):
-                if w in words_list:
-                    self.words_counter[w] += 1
-        for word in self.words_counter:
-            print(word, self.words_counter[word])
-        self.save_to_csv()
 
     def counter_words_v2(self, words_in):
         words_list = words_in.split()
-        for word in words_list:
-            self.words_counter.setdefault(word, 0)
+        w_select = []
+        w_no_find = []
         with open(self.file_path, 'r', encoding='utf-8') as f:
             w_clean = merge(cleanse_word(f.read()))
             for w in w_clean:
                 if w in words_list:
-                    self.words_counter[w] += 1
-        for word in self.words_counter:
-            print(word, self.words_counter[word])
-        self.save_to_csv()
+                    w_select.append(w)
+            for w in words_list:
+                if not w in w_select:
+                    w_no_find.append(w)
+        self.total_words = len(w_clean)
+        self.save_to_csv(w_select, w_no_find)
         self.save_all_to_csv(w_clean)
 
-    def save_to_csv(self):
-        with open("words_frequency.csv", "w", newline='') as f:
+    def save_to_csv(self, w_select, w_no_find):
+        file_name = "words_frequency_given.csv"
+        words = collections.Counter(w_select)
+        print("Save given words counter to " + file_name)
+        with open(file_name, "w", newline='') as f:
             f_csv = csv.writer(f)
-            for key, value in self.words_counter.items():
-                f_csv.writerow([key, value])
+            f_csv.writerow(["Hello, Miss Tang :)"])
+            f_csv.writerow(["  This is the sorted words of file given. And for the TAG definition, please refer to https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html"])
+            f_csv.writerow([]) # empty line
+            f_csv.writerow(['TOTAL', self.total_words])
+            f_csv.writerow([]) # empty line
+            f_csv.writerow(csv_header)
+            f_csv.writerows(append_ext(words.most_common()))
+            for word in w_no_find:
+                f_csv.writerow([word, 0])
 
     def save_all_to_csv(self, w_clean):
+        file_name = "words_frequency_all.csv"
         words = collections.Counter(w_clean)
+        print("Save given words counter to " + file_name)
         with open("words_frequency_all.csv", "w", newline='') as f:
             f_csv = csv.writer(f)
+            f_csv.writerow(["Hello, Miss Tang :)"])
+            f_csv.writerow(["  This is the whole words of file given. And for the TAG definition, please refer to https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html"])
+            f_csv.writerow([]) # empty line
+            f_csv.writerow(['TOTAL', self.total_words])
+            f_csv.writerow([]) # empty line
+            f_csv.writerow(csv_header)
             f_csv.writerows(append_ext(words.most_common()))
 
