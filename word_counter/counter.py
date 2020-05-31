@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 import re
 import csv
 import sys,collections,nltk
@@ -90,24 +91,28 @@ class WordCounter(object):
         self.total_words = 0
         self.file_path = file_path
 
-    def counter_words_v2(self, words_in):
-        words_list = words_in.split()
-        w_select = []
-        w_no_find = []
+    def counter_words_v2(self, words_in, od):
         with open(self.file_path, 'r', encoding='utf-8') as f:
             w_clean = merge(cleanse_word(f.read()))
-            for w in w_clean:
-                if w in words_list:
-                    w_select.append(w)
-            for w in words_list:
-                if not w in w_select:
-                    w_no_find.append(w)
-        self.total_words = len(w_clean)
-        self.save_to_csv(w_select, w_no_find)
-        self.save_all_to_csv(w_clean)
+            self.total_words = len(w_clean)
+            self.save_all_to_csv(w_clean, od)
 
-    def save_to_csv(self, w_select, w_no_find):
-        file_name = "words_frequency_given.csv"
+            if words_in != "":
+                w_select = []
+                w_no_find = []
+                words_list = words_in.split()
+                for w in w_clean:
+                    if w in words_list:
+                        w_select.append(w)
+                for w in words_list:
+                    if not w in w_select:
+                        w_no_find.append(w)
+                self.save_to_csv(w_select, w_no_find, od)
+
+    def save_to_csv(self, w_select, w_no_find, od):
+        file_name = os.getcwd() + "\words_frequency_given.csv"
+        if os.path.isdir(od) == True:
+            file_name = od + "\words_frequency_given.csv"
         words = collections.Counter(w_select)
         print("Save given words counter to " + file_name)
         with open(file_name, "w", newline='') as f:
@@ -122,11 +127,13 @@ class WordCounter(object):
             for word in w_no_find:
                 f_csv.writerow([word, 0])
 
-    def save_all_to_csv(self, w_clean):
-        file_name = "words_frequency_all.csv"
+    def save_all_to_csv(self, w_clean, od):
+        file_name = os.getcwd() + "\words_frequency_all.csv"
+        if os.path.isdir(od):
+            file_name = od + "\words_frequency_all.csv"
         words = collections.Counter(w_clean)
         print("Save given words counter to " + file_name)
-        with open("words_frequency_all.csv", "w", newline='') as f:
+        with open(file_name, "w", newline='') as f:
             f_csv = csv.writer(f)
             f_csv.writerow(["Hello, Miss Tang :)"])
             f_csv.writerow(["  This is the whole words of file given. And for the TAG definition, please refer to https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html"])

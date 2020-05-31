@@ -10,7 +10,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Word counting program, counts frequency of words in a file.')
     parser.add_argument("file_path")
-    parser.add_argument("-w","--words", help="calculate counter of given words", type = str)
+    parser.add_argument("-w","--words", help="calculate counter of given words", type = str, default = "")
+    parser.add_argument("-o","--outdir", help="specify the output directory", type = str, default = ".")
     parser.add_argument("-c","--clean", help="clean temp files", type = bool, default = True)
     
     args = parser.parse_args()
@@ -24,8 +25,7 @@ if __name__ == "__main__":
 
     wc = WordCounter(txt_file.textFilename)
 
-    if args.words != None:
-        wc.counter_words_v2(args.words)
+    wc.counter_words_v2(args.words, args.outdir)
 
     fileExtension = file_path.split(".")[-1]
     if args.clean == True and fileExtension != "txt":
