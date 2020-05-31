@@ -92,6 +92,8 @@ class WordCounter(object):
         self.file_path = file_path
 
     def counter_words_v2(self, words_in, od):
+        if od[-1] == '\\' or od[-1] == '/':
+            od = od[:-1]
         with open(self.file_path, 'r', encoding='utf-8') as f:
             w_clean = merge(cleanse_word(f.read()))
             self.total_words = len(w_clean)
