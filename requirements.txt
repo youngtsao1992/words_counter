@@ -1,7 +1,7 @@
 click==7.1.2
 joblib==0.15.1
 lxml==4.5.1
-nltk==3.5
+nltk==3.6.6
 Pillow==6.2.2
 python-docx==0.8.10
 regex==2020.5.14
